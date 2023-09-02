@@ -1,7 +1,7 @@
 // Problem Link : https://leetcode.com/problems/counting-bits/
 
 
-// Solution -- Recursion + Memoization (DP) //
+// Solution //
 class Solution {
 public:
     vector<int> countBits(int n) {
