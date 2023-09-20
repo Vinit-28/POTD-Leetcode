@@ -39,32 +39,19 @@ public:
 
 
 
-// Solution -- Using Only PrefixSum //
+// Solution -- Using Sliding Window //
 class Solution {
 public:
     int minOperations(vector<int>& nums, int x) {
-        int sum = 0, n = nums.size(), ans = INT_MAX;
-        int prefixSum[n];
-        // Storing Prefix Sum //
+        int sum = 0, n = nums.size();
+        // Making Sum //
         for(int i=0;i<n;i++){
             sum += nums[i];
-            prefixSum[i] = sum;
         }
-        // Finding the answer //
+        // Finding the maximum no of elements to sum to find the x'(sum - x) //
+        int xDash = sum - x, maxElesInclude = 0, start = 0;
+        sum = 0;
         for(int i=0;i<n;i++){
-            // First Case leftmost to current index //
-            if( prefixSum[i] == x ){
-                ans = min(ans, i+1);
-            }
-            // Second Case current index to rightmost //
-            if( i>0 && (prefixSum[n-1] - prefixSum[i-1]) == x ){
-                ans = min(ans, n-i);
-            }
-        }
-        // Handling the edge case -- include elements from both sides left & right //
-        int xDash = sum - x, maxElesInclude = 0, start = 1;
-        sum = nums[1];
-        for(int i=2;i<n;i++){
             sum += nums[i];
             while( sum > xDash && start <= i ){
                 sum -= nums[start++];
@@ -73,7 +60,6 @@ public:
                 maxElesInclude = max(maxElesInclude, i-start+1);
             }
         }
-        ans = maxElesInclude == 0? ans : min(ans, n - maxElesInclude);
-        return ans==INT_MAX? -1 : ans;
+        return maxElesInclude==0? -1 : n-maxElesInclude;
     }
 };
