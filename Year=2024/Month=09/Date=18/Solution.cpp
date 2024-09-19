@@ -1,23 +1,35 @@
-// Problem Link : https://leetcode.com/problems/largest-number/description/
+// Problem Link : https://leetcode.com/problems/different-ways-to-add-parentheses/description/
 
 
 // Solution //
 class Solution {
 private:
-    bool isAllZero(string &num){
-        for(auto &d : num) if( d > '0' ) return false;
-        return true;
+    bool isOperand(char &ch){
+        return (ch=='+' || ch=='-' || ch=='*');
     }
 
+    int doOperation(int val1, int val2, char operand){
+        return (operand=='+'? val1 + val2 : operand=='-'? val1 - val2 : val1 * val2);
+    }
 public:
-    string largestNumber(vector<int>& nums) {
-        string ans = "";
-        sort(begin(nums), end(nums), [](int a, int b){
-            string stra = to_string(a);
-            string strb = to_string(b);
-            return (stra+strb) > (strb+stra);
-        });
-        for(auto &num: nums) ans += to_string(num);
-        return isAllZero(ans)? "0" : ans;
+    vector<int> diffWaysToCompute(string exp) {
+        vector<int> ans;
+        int n = exp.size();
+        for(int idx=0; idx<n; idx++){
+            if( isOperand(exp[idx]) ){
+                char operand = exp[idx];
+                vector<int> left = diffWaysToCompute(exp.substr(0, idx));
+                vector<int> right = diffWaysToCompute(exp.substr(idx+1, n-idx-1));
+                for(auto &l : left){
+                    for(auto &r : right){
+                        ans.push_back(doOperation(l, r, operand));
+                    }
+                }
+            }
+        }
+        if( ans.empty() ){
+            ans.push_back(stoi(exp));
+        }
+        return ans;
     }
 };
