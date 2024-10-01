@@ -1,42 +1,32 @@
-// Problem Link : https://leetcode.com/problems/all-oone-data-structure/description/
+// Problem Link : https://leetcode.com/problems/design-a-stack-with-increment-operation/description/
 
 
 // Solution //
-class AllOne {
+class CustomStack {
+private:
+    vector<int> arr;
+    int maxSize;
 public:
-    unordered_map<string,int> count;  // Stores the count of each key
-    set<pair<int,string>> se;         // Sorted set to keep counts and keys
+    CustomStack(int maxSize) {
+        arr = vector<int>();
+        this->maxSize = maxSize;
+    }
     
-    AllOne() {
-        count.clear();  // Initialize the count map
+    void push(int x) {
+        if( arr.size() < maxSize ){
+            arr.push_back(x);
+        }
     }
-
-    // Increment the count of the key
-    void inc(string key) {
-        int n = count[key];   // Get current count
-        count[key]++;         // Increment the count
-        se.erase({n, key});   // Remove the old pair from set
-        se.insert({n+1, key}); // Insert the new pair with updated count
+    
+    int pop() {
+        int ele = -1;
+        if( !arr.empty() ) ele = arr.back(), arr.pop_back();
+        return ele;
     }
-
-    // Decrement the count of the key
-    void dec(string key) {
-        int n = count[key];   // Get current count
-        count[key]--;         // Decrement the count
-        se.erase({n, key});   // Remove the old pair from set
-        if (count[key] > 0) se.insert({n-1, key});  // If count > 0, insert updated pair
-        else count.erase(key);  // If count reaches 0, remove the key from map
-    }
-
-    // Get the key with the maximum count
-    string getMaxKey() {
-        if (!se.empty()) return se.rbegin()->second;  // Last element gives the maximum
-        return "";
-    }
-
-    // Get the key with the minimum count
-    string getMinKey() {
-        if (!se.empty()) return se.begin()->second;  // First element gives the minimum
-        return "";
+    
+    void increment(int k, int val) {
+        for(int i=0; i<min((int)arr.size(), k); i++){
+            arr[i] += val;
+        }
     }
 };
